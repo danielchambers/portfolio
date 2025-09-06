@@ -44,8 +44,7 @@ jobs:
           protocol: ftps
           local-dir: dist/
           server-dir: /public_html/
-          # optional but helpful:
-          excludes: |
+          exclude: |
             **/.git*
             **/.github/**
             node_modules/**
