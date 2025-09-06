@@ -48,13 +48,13 @@ jobs:
       - name: FTP Deploy (dry run)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          server: ${{ secrets.FTP_SERVER }}        # ftp.danielchambe.rs
-          username: ${{ secrets.FTP_USERNAME }}    # portfolio@danielchambe.rs
+          server: ${{ secrets.FTP_SERVER }}        # e.g. ftp.danielchambe.rs (hostname only)
+          username: ${{ secrets.FTP_USERNAME }}    # e.g. portfolio@danielchambe.rs
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           port: 21
           local-dir: dist/
-          server-dir: /public_html/                # <-- set based on your lftp `pwd`
+          server-dir: /public_html/                # from your `lftp` pwd
           dry-run: true
           log-level: verbose
           exclude: |
@@ -64,7 +64,6 @@ jobs:
 
       # real upload
       - name: FTP Deploy
-        if: ${{ success() }}
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -73,7 +72,7 @@ jobs:
           protocol: ftp
           port: 21
           local-dir: dist/
-          server-dir: /public_html/                # same as above
+          server-dir: /public_html/
           log-level: verbose
           timeout: 60000
           exclude: |
