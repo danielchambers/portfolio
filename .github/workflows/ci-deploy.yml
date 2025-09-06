@@ -28,26 +28,55 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+
       - run: npm ci
       - run: npm run build
 
-      - name: Deploy to cPanel via FTPS
+      # optional: see what's being uploaded
+      - name: List dist contents
+        run: |
+          echo "---- dist ----"
+          ls -la dist
+          echo "--------------"
+
+      # dry run first (no upload) to verify connection & paths
+      - name: FTP Deploy (dry run)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_SERVER }}        # ftp.danielchambe.rs
+          username: ${{ secrets.FTP_USERNAME }}    # portfolio@danielchambe.rs
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
+          local-dir: dist/
+          server-dir: /public_html/                # <-- set based on your lftp `pwd`
+          dry-run: true
+          log-level: verbose
+          exclude: |
+            **/.git*
+            **/.github/**
+            node_modules/**
+
+      # real upload
+      - name: FTP Deploy
+        if: ${{ success() }}
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
-          security: loose
+          port: 21
           local-dir: dist/
-          server-dir: /public_html/
+          server-dir: /public_html/                # same as above
+          log-level: verbose
+          timeout: 60000
           exclude: |
             **/.git*
             **/.github/**
             node_modules/**
-          log-level: verbose
-          # dangerous-clean-slate: true
