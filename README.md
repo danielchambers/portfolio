@@ -25,6 +25,7 @@ It’s a simple static site built with **HTML, CSS, and JavaScript**, with autom
 This project uses **GitHub Actions** to automatically check, build, and deploy the site on every push to the `main` branch.
 
 ### Pipeline steps
+
 1. **Prettier** – check formatting (`npm run format:check`)
 2. **ESLint** – lint JavaScript (`npm run lint`)
 3. **Jest** – run unit tests (`npm test`)
@@ -32,6 +33,7 @@ This project uses **GitHub Actions** to automatically check, build, and deploy t
 5. **Deploy** – upload `dist/` to the server via FTP
 
 ### Secrets required
+
 Go to your repo: **Settings → Secrets and variables → Actions → Secrets** and add:
 
 - `FTP_SERVER` → FTP Server (e.g. `ftps.website.com`)
